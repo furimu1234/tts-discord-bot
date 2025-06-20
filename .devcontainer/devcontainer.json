@@ -1,0 +1,19 @@
+{
+  "name": "tts-dioscord-bot",
+  "dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "pnpm i",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        //"ms-vscode.vscode-typescript-next",
+        "ms-azuretools.vscode-docker",
+        "cweijan.vscode-myssql-client2",
+        "Reuben.root-bear",
+        "PKief.material-icon-theme"
+      ]
+    }
+  }
+}
