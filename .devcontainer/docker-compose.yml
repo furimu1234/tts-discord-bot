@@ -1,5 +1,5 @@
 services:
-  app:
+  tts-discord-bot:
     container_name: tts-discord-bot
     build:
       context: ..
