@@ -1,21 +1,26 @@
 import type { getDictionaries, getGlobalDictionaries } from '@tts/db';
 
+export type IDictionaryResponse = Awaited<ReturnType<typeof getDictionaries>>;
+export type IGlobalDictionaryResponse = Awaited<
+	ReturnType<typeof getGlobalDictionaries>
+>;
+
 /**辞書を置換する */
-interface IdictionaryReplace {
+interface IDictionaryReplace {
 	/**ユーザ辞書とグローバル辞書を置換する */
 	auto: (
 		baseText: string,
-		dictionaries: Awaited<ReturnType<typeof getDictionaries>>,
-		globalDictionaries: Awaited<ReturnType<typeof getGlobalDictionaries>>,
-	) => Promise<string>;
+		dictionaries: IDictionaryResponse,
+		globalDictionaries: IGlobalDictionaryResponse,
+	) => string;
 }
 
-export const dictionaryReplace = (): IdictionaryReplace => {
-	const auto = async (
+export const DictionaryReplace = (): IDictionaryReplace => {
+	const auto = (
 		baseText: string,
-		dictionaries: Awaited<ReturnType<typeof getDictionaries>>,
-		globalDictionaries: Awaited<ReturnType<typeof getGlobalDictionaries>> = [],
-	): Promise<string> => {
+		dictionaries: IDictionaryResponse,
+		globalDictionaries: IGlobalDictionaryResponse = [],
+	): string => {
 		let replacedText = baseText;
 
 		if (globalDictionaries.length > 0) {

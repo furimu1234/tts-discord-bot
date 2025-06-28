@@ -1,0 +1,25 @@
+{
+	"name": "@tts/generatevoice",
+	"private": "true",
+	"type": "module",
+	"files": [
+		"dist",
+		"src",
+		"!src/**/*.test.ts"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./src/index.ts"
+		}
+	},
+	"scripts": {
+		"dev": "DOTENV_CONFIG_PATH=../.env tsx -r dotenv/config --watch src/index.ts",
+		"type-check": "tsc --noEmit -p ."
+	},
+	"dependencies": {
+		"@tts/db": "workspace:*",
+		"@tts/lib": "workspace:*",
+		"@tts/replace": "workspace:*"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "@tts/lib",
+	"private": "true",
+	"type": "module",
+	"files": [
+		"dist",
+		"src",
+		"!src/**/*.test.ts"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./src/index.ts"
+		}
+	},
+	"scripts": {
+		"dev": "DOTENV_CONFIG_PATH=../.env tsx -r dotenv/config --watch src/index.ts",
+		"type-check": "tsc --noEmit -p ."
+	}
+}
