@@ -57,7 +57,7 @@ export const DiscordReplace = (): IDiscordReplace => {
 
 		const matches = [...text.matchAll(/<@!?(\d+)>/g)];
 
-		if (message.guild.members.cache.size <= 1) {
+		if (message.guild.members.cache.size < 2) {
 			await message.guild.members.fetch({});
 		}
 
