@@ -20,6 +20,12 @@ export const spakerEmotionMaster = dbSchema.table('speaker_emotion_master', {
 	emotion: varchar('emotion').$type<emotion>(),
 });
 
+export const guildInfo = dbSchema.table('guild_info', {
+	id: serial('id').primaryKey(),
+	guildId: varchar('guild_id', { length: 19 }).notNull(),
+	textLength: integer('text_length').default(50).notNull(),
+});
+
 export const voicePreference = dbSchema.table(
 	'voice_preference',
 	{
