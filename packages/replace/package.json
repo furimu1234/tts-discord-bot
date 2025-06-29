@@ -8,13 +8,11 @@
 		"!src/**/*.test.ts"
 	],
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./src/index.ts"
-		}
+		".": "./dist/index.js"
 	},
 	"scripts": {
 		"dev": "DOTENV_CONFIG_PATH=../.env tsx -r dotenv/config --watch src/index.ts",
+		"build": "tsc -p .",
 		"type-check": "tsc --noEmit -p ."
 	},
 	"dependencies": {
