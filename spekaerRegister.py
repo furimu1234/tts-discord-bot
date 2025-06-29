@@ -12,7 +12,7 @@ class NameType(TypedDict):
 class SpeakerType(TypedDict):
     id: int
     name: str
-    styles: list[NameType]
+    style: str
 
 
 
@@ -31,65 +31,46 @@ class SpeakerType(TypedDict):
 #     values: list[SpeakerType] = []
 
 #     for i, res in enumerate(response,0):
-#         names = list(map(itemgetter("name"), res["styles"]))
-  
-#         values.append({
-#             "id": i,
-#             "name": res["name"],
-#             "styles": names
-#         })
+#         for style in res["styles"]:
+#             values.append({
+#                 "id": style["id"],
+#                 "name": res["name"],
+#                 "style": style["name"]
+#             })
 
-#     records = [(v["id"],v["name"],v["styles"]) for v in values]
-#     print(values)
+
+  
+#     records = [(v["id"],v["name"],v["style"]) for v in values]
+ 
 #     pool = await asyncpg.create_pool(dsn=os.environ.get("POSTGRESQL_URL"))
 #     async with pool.acquire() as conn:
 #         async with conn.transaction():
-#             await conn.executemany( "insert into tts.speaker_emotion_master (id, name,styles) values ($1,$2,$3)", records)
+#             await conn.executemany( "insert into tts.speaker_emotion_master (id, speaker,emotion) values ($1,$2,$3)", records)
 
 async def main():
+    speakers = ["男性1", "男性2", "女性1", "女性2", "サンタ","熊"]
+
     emotions=["喜び","怒り","悲しみ"]
 
-    values = [
-        {
-            "id": 33,
-            "name": "男性1",
-            "styles": emotions
-        },
-        {
-            "id": 34,
-            "name": "男性2",
-            "styles": emotions
-        },
-        {
-            "id": 35,
-            "name": "女性1",
-            "styles": emotions
-        },
-        {
-            "id": 37,
-            "name": "女性2",
-            "styles": emotions
-        },
-        {
-            "id": 38,
-            "name": "サンタ",
-            "styles": emotions
-        },
-        {
-            "id": 39,
-            "name": "熊",
-            "styles": emotions
-        },
-    ]
+    values = []
 
-    records = [(v["id"],v["name"],v["styles"]) for v in values]
+    for speaker in speakers:
+        for emotion in emotions:
+            values.append({
+                "name": speaker,
+                "style": emotion
+            })
+
+
+
+    records = [(i,v["name"],v["style"]) for i,v in enumerate(values, 500)]
 
 
     pool = await asyncpg.create_pool(dsn=os.environ.get("POSTGRESQL_URL"))
 
     async with pool.acquire() as conn:
         async with conn.transaction():
-            await conn.executemany( "insert into tts.speaker_emotion_master (id, name,styles) values ($1,$2,$3)", records)
+            await conn.executemany( "insert into tts.speaker_emotion_master (id, speaker,emotion) values ($1,$2,$3)", records)
 
 
 
