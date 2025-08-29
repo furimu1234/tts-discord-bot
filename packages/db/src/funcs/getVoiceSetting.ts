@@ -3,8 +3,8 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { type SchemaDB, usersVoicePreference, voicePreference } from '../';
 
 /**
- * Voice Text Web APIの設定を取得する
- * @param db prisma
+ * 読み上げ音声の設定を取得する
+ * @param db drizzle
  * @param userid 設定を取得するユーザのID
  * @returns
  */
@@ -20,9 +20,10 @@ export async function getVoiceSetting(db: SchemaDB, userid: string) {
 }
 
 /**
- * Voice Text Web APIの設定を取得する
- * @param db prisma
- * @param userid 設定を取得するユーザのID
+ * parentが設定した読み上げ音声の設定を取得する
+ * @param db drizzle
+ * @param parentId 読み上げ音声の設定を取得するユーザID
+ * @param userid サブ設定を取得するユーザのID
  * @returns
  */
 export async function getVoiceSubSettings(

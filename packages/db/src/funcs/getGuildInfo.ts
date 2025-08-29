@@ -19,7 +19,18 @@ export async function getGuildInfo(
 			filter.textLength !== undefined
 				? eq(guildInfo.textLength, filter.textLength)
 				: undefined,
+			filter.inVoiceOnly !== undefined
+				? eq(guildInfo.inVoiceOnly, filter.inVoiceOnly)
+				: undefined,
 		),
+		with: {
+			voiceConnections: {
+				columns: {
+					id: false,
+					guildId: false,
+				},
+			},
+		},
 	});
 	return results;
 }

@@ -29,5 +29,11 @@ services:
     expose:
         - "5432"
 
+  tts_bot_local_voicevox_engine:
+    image: voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+    expose:
+      - 50021
+    tty: true
+
 volumes:
     postgres-data:

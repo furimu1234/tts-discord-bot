@@ -1,14 +1,14 @@
 import { MakeDataStore, schema } from '@tts/db';
-
-import { VoiceVoxClient, voiceTextWebClient } from '@tts/generatevoice';
+import { Player, makeVoiceVoxClient } from '@tts/lib';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import pino from 'pino';
 
+import type { VoiceConnection } from '@discordjs/voice';
+import { makeReplaceClient } from '@tts/replace';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import dotenv from 'dotenv';
 import type { ContainerRef, IContainer } from './types';
-console.log('CWD: ', process.cwd());
 dotenv.config({ path: '../../.env' });
 
 export const Container = (): IContainer => {
@@ -37,24 +37,31 @@ export const Container = (): IContainer => {
 		return dataStore;
 	};
 
-	const getVoiceTextWebClient = () => {
-		return voiceTextWebClient(process.env.VoiceTextWebAPIKey);
-	};
 	const getVoiceVoxClient = () => {
-		return VoiceVoxClient();
+		return makeVoiceVoxClient(logger);
+	};
+
+	const getPlayer = (connection: VoiceConnection) => {
+		return Player(connection);
+	};
+
+	const getReplaceClient = () => {
+		return makeReplaceClient();
 	};
 
 	return {
 		logger,
 		getDataStore,
-		getVoiceTextWebClient,
+
 		getVoiceVoxClient,
+		getPlayer,
+		getReplaceClient,
 	};
 };
 
 export const container: ContainerRef = { current: undefined };
 
-export const ttsBotClient1 = new Client({
+export const botClient = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
@@ -64,35 +71,5 @@ export const ttsBotClient1 = new Client({
 	],
 	partials: [Partials.GuildMember, Partials.User],
 });
-export const ttsBotClient2 = new Client({
-	intents: [
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.GuildVoiceStates,
-		GatewayIntentBits.GuildMembers,
-	],
-	partials: [Partials.GuildMember, Partials.User],
-});
-export const ttsBotClient3 = new Client({
-	intents: [
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.GuildVoiceStates,
-		GatewayIntentBits.GuildMembers,
-	],
-	partials: [Partials.GuildMember, Partials.User],
-});
-export const ttsBotClient4 = new Client({
-	intents: [
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.GuildVoiceStates,
-		GatewayIntentBits.GuildMembers,
-	],
-	partials: [Partials.GuildMember, Partials.User],
-});
 
-ttsBotClient1.setMaxListeners(30);
-ttsBotClient2.setMaxListeners(30);
-ttsBotClient3.setMaxListeners(30);
-ttsBotClient4.setMaxListeners(30);
+botClient.setMaxListeners(30);

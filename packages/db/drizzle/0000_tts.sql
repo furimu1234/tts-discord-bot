@@ -1,11 +1,4 @@
-drop table tts.dictionary;
-drop table tts.dictionary_enable;
-drop table tts.speaker_emotion_master;
-drop table tts.users_voice_preference;
-drop table tts.voice_preference;
-
-
-CREATE TABLE "tts"."dictionary" (
+CREATE TABLE "dictionary" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"parent_id" varchar(19) NOT NULL,
 	"creater_id" varchar(19) NOT NULL,
@@ -15,7 +8,7 @@ CREATE TABLE "tts"."dictionary" (
 	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE TABLE "tts"."dictionary_enable" (
+CREATE TABLE "dictionary_enable" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" varchar(19) NOT NULL,
 	"dictionary_id" integer NOT NULL,
@@ -24,39 +17,52 @@ CREATE TABLE "tts"."dictionary_enable" (
 	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE TABLE "tts"."speaker_emotion_master" (
+CREATE TABLE "guild_info" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"guild_id" varchar(19) NOT NULL,
+	"text_length" integer DEFAULT 50 NOT NULL,
+	"in_voice_only" boolean DEFAULT true NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "speaker_emotion_master" (
 	"id" integer PRIMARY KEY NOT NULL,
 	"speaker" varchar,
 	"emotion" varchar
 );
 --> statement-breakpoint
-CREATE TABLE "tts"."users_voice_preference" (
+CREATE TABLE "users_voice_preference" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"parent_id" varchar(19) NOT NULL,
 	"user_id" varchar(19) NOT NULL,
-	"speaker" varchar(6) NOT NULL,
-	"emotion" varchar(9) NOT NULL,
-	"emotion_level" integer NOT NULL,
-	"pitch" integer NOT NULL,
-	"speed" integer NOT NULL,
+	"speakerId" integer NOT NULL,
+	"emotion_level" double precision NOT NULL,
+	"pitch" double precision NOT NULL,
+	"speed" double precision NOT NULL,
 	"is_mnuted" boolean NOT NULL,
 	"is_self_edited" boolean NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE TABLE "tts"."voice_preference" (
+CREATE TABLE "voice_connection" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"guild_id" varchar(19) NOT NULL,
+	"text_id" varchar(19) NOT NULL,
+	"voice_id" varchar(19) NOT NULL,
+	"isAutoConnect" boolean DEFAULT false NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "voice_preference" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" varchar(19) NOT NULL,
-	"speaker" varchar(6) NOT NULL,
-	"emotion" varchar(9) NOT NULL,
-	"emotion_level" integer NOT NULL,
-	"pitch" integer NOT NULL,
-	"speed" integer NOT NULL,
+	"speakerId" integer NOT NULL,
+	"emotion_level" double precision NOT NULL,
+	"pitch" double precision NOT NULL,
+	"speed" double precision NOT NULL,
 	"text_length" integer NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
-CREATE INDEX "parent_user_idx" ON "tts"."users_voice_preference" USING btree ("parent_id","user_id");--> statement-breakpoint
-CREATE INDEX "user_idx" ON "tts"."voice_preference" USING btree ("user_id");
+CREATE INDEX "parent_user_idx" ON "users_voice_preference" USING btree ("parent_id","user_id");--> statement-breakpoint
+CREATE INDEX "user_idx" ON "voice_preference" USING btree ("user_id");

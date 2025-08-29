@@ -1,12 +1,7 @@
 import { getVoiceConnection } from '@discordjs/voice';
-import { type Client, Events, type Message } from 'discord.js';
-import {
-	container,
-	ttsBotClient1,
-	ttsBotClient2,
-	ttsBotClient3,
-	ttsBotClient4,
-} from '../../container';
+import { deleteVoiceConnection } from '@tts/db';
+import { Events, type Message } from 'discord.js';
+import { botClient, container } from '../../container';
 import { FailedDisconnect } from '../../errors';
 import { fetchMember, sendErrorMessage } from '../../lib';
 
@@ -31,6 +26,8 @@ export async function execute(message: Message): Promise<void> {
 		memberId: message.author.id,
 	});
 
+	const store = container.current.getDataStore();
+
 	if (!member) return;
 
 	const voiceChannel = member.voice.channel;
@@ -38,37 +35,6 @@ export async function execute(message: Message): Promise<void> {
 	if (!voiceChannel) {
 		sendErrorMessage(message.channel, 'VCに接続してから実行してね!');
 		return;
-	}
-
-	const voiceChannelMemberIds = voiceChannel.members.map((x) => x.id);
-
-	let botClient: Client | undefined = undefined;
-
-	const botUser1 = ttsBotClient1.user;
-	const botUser2 = ttsBotClient2.user;
-	const botUser3 = ttsBotClient3.user;
-	const botUser4 = ttsBotClient4.user;
-
-	//コマンドを入力した人が入ってるVCに居るBOTを切断する
-
-	if (botUser1 !== null) {
-		if (voiceChannelMemberIds.find((x) => x === botUser1.id)) {
-			botClient = ttsBotClient1;
-		}
-	} else if (botUser2 !== null) {
-		if (voiceChannelMemberIds.find((x) => x === botUser2.id)) {
-			botClient = ttsBotClient2;
-		}
-	} else if (botUser3 !== null) {
-		if (voiceChannelMemberIds.find((x) => x === botUser3.id)) {
-			botClient = ttsBotClient3;
-		}
-	} else if (botUser4 !== null) {
-		if (voiceChannelMemberIds.find((x) => x === botUser4.id)) {
-			botClient = ttsBotClient4;
-		}
-	} else {
-		throw new FailedDisconnect(message.channel);
 	}
 
 	if (!botClient?.user) {
@@ -80,6 +46,10 @@ export async function execute(message: Message): Promise<void> {
 	if (!connection) {
 		throw new FailedDisconnect(message.channel);
 	}
+
+	await store.do(async (db) => {
+		await deleteVoiceConnection(db, { voiceId: voiceChannel.id });
+	});
 
 	connection.destroy();
 

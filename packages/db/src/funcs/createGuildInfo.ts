@@ -13,9 +13,9 @@ export async function createGuildInfo(db: SchemaDB, guildId: string) {
 		.values({
 			guildId: guildId,
 		})
-		.returning();
+		.returning({ id: guildInfo.id });
 
 	if (results.length === 0) throw new Error('');
 
-	return results[0];
+	return results[0].id;
 }

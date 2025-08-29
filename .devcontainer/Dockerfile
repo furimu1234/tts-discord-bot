@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/devcontainers/typescript-node:18
 
 # パッケージのインストール
 RUN apt update
-RUN apt install -y locales curl ffmpeg
+RUN apt install -y locales curl ffmpeg python3 make g++ pkg-config libopus-dev && rm -rf /var/lib/apt/lists/*
 RUN locale-gen ja-JP.UTF-8 
 RUN localedef -f UTF-8 -i ja_JP ja_JP
 WORKDIR /workspace

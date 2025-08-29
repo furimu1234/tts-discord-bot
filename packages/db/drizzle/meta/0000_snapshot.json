@@ -1,12 +1,12 @@
 {
-  "id": "7493fba5-da48-495e-9126-81f487d5a8ae",
+  "id": "a6d3b6f5-80e8-4cc5-ab42-cc33dce49336",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "tts.dictionary": {
+    "public.dictionary": {
       "name": "dictionary",
-      "schema": "tts",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -61,9 +61,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "tts.dictionary_enable": {
+    "public.dictionary_enable": {
       "name": "dictionary_enable",
-      "schema": "tts",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -112,9 +112,48 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "tts.speaker_emotion_master": {
+    "public.guild_info": {
+      "name": "guild_info",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "guild_id": {
+          "name": "guild_id",
+          "type": "varchar(19)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "text_length": {
+          "name": "text_length",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 50
+        },
+        "in_voice_only": {
+          "name": "in_voice_only",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.speaker_emotion_master": {
       "name": "speaker_emotion_master",
-      "schema": "tts",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -143,9 +182,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "tts.users_voice_preference": {
+    "public.users_voice_preference": {
       "name": "users_voice_preference",
-      "schema": "tts",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -165,33 +204,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "speaker": {
-          "name": "speaker",
-          "type": "varchar(6)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "emotion": {
-          "name": "emotion",
-          "type": "varchar(9)",
+        "speakerId": {
+          "name": "speakerId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "emotion_level": {
           "name": "emotion_level",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "pitch": {
           "name": "pitch",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "speed": {
           "name": "speed",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
@@ -252,9 +285,53 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "tts.voice_preference": {
+    "public.voice_connection": {
+      "name": "voice_connection",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "guild_id": {
+          "name": "guild_id",
+          "type": "varchar(19)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "text_id": {
+          "name": "text_id",
+          "type": "varchar(19)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voice_id": {
+          "name": "voice_id",
+          "type": "varchar(19)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isAutoConnect": {
+          "name": "isAutoConnect",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.voice_preference": {
       "name": "voice_preference",
-      "schema": "tts",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
@@ -268,33 +345,27 @@
           "primaryKey": false,
           "notNull": true
         },
-        "speaker": {
-          "name": "speaker",
-          "type": "varchar(6)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "emotion": {
-          "name": "emotion",
-          "type": "varchar(9)",
+        "speakerId": {
+          "name": "speakerId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "emotion_level": {
           "name": "emotion_level",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "pitch": {
           "name": "pitch",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },
         "speed": {
           "name": "speed",
-          "type": "integer",
+          "type": "double precision",
           "primaryKey": false,
           "notNull": true
         },

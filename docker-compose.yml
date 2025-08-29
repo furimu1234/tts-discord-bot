@@ -4,5 +4,3 @@ services:
     expose:
       - 50021
     tty: true
-    ports:
-      - "50021:50021"

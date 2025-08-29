@@ -3,7 +3,7 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "tts-discord-bot",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-	"postCreateCommand": "pnpm i",
+	"postCreateCommand": "pnpm i && pnpm add -w @discordjs/opus && pnpm rebuild @discordjs/opus",
 	"customizations": {
 		"vscode": {
 			"extensions": [

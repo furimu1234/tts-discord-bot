@@ -1,4 +1,4 @@
-import { ChannelType, type Message } from 'discord.js';
+import { ChannelType, type Guild, type Message } from 'discord.js';
 
 /**discordメッセージを変換する */
 interface IDiscordReplace {
@@ -8,6 +8,12 @@ interface IDiscordReplace {
 	roleMentionToNameFromMessage: (message: Message) => string;
 	/**ユーザメンションをユーザ名に置換する */
 	userMentionToNameFromMessage: (message: Message) => Promise<string>;
+	/**チャンネルメンションをチャンネル名に置換する */
+	channelMentionToName: (text: string, guild: Guild) => string;
+	/**ロールメンションをロール名に置換する */
+	roleMentionToName: (text: string, guild: Guild) => string;
+	/**ユーザメンションをユーザ名に置換する */
+	userMentionToName: (text: string, guild: Guild) => Promise<string>;
 }
 
 export const DiscordReplace = (): IDiscordReplace => {
@@ -30,6 +36,23 @@ export const DiscordReplace = (): IDiscordReplace => {
 
 		return text;
 	};
+
+	const channelMentionToName = (text: string, guild: Guild): string => {
+		const matches = [...text.matchAll(/<#(\d+)>/g)];
+
+		for (const match of matches) {
+			const channelId = match[1];
+			const channel = guild.channels.cache
+				.filter((x) => x.type === ChannelType.GuildText)
+				.get(channelId);
+			if (channel) {
+				text = text.replace(match[0], channel.name);
+			}
+		}
+
+		return text;
+	};
+
 	const roleMentionToNameFromMessage = (message: Message): string => {
 		if (!message.guild) return message.content;
 
@@ -40,6 +63,19 @@ export const DiscordReplace = (): IDiscordReplace => {
 		for (const match of matches) {
 			const roleId = match[1];
 			const role = message.guild.roles.cache.get(roleId);
+			if (role) {
+				text = text.replace(match[0], role.name);
+			}
+		}
+
+		return text;
+	};
+	const roleMentionToName = (text: string, guild: Guild): string => {
+		const matches = [...text.matchAll(/<@&(\d+)>/g)];
+
+		for (const match of matches) {
+			const roleId = match[1];
+			const role = guild.roles.cache.get(roleId);
 			if (role) {
 				text = text.replace(match[0], role.name);
 			}
@@ -73,9 +109,34 @@ export const DiscordReplace = (): IDiscordReplace => {
 		return text;
 	};
 
+	const userMentionToName = async (
+		text: string,
+		guild: Guild,
+	): Promise<string> => {
+		const matches = [...text.matchAll(/<@!?(\d+)>/g)];
+
+		if (guild.members.cache.size < 2) {
+			await guild.members.fetch({});
+		}
+
+		for (const match of matches) {
+			const memberId = match[1];
+
+			const member = guild.members.cache.get(memberId);
+			if (member) {
+				text = text.replace(match[0], member.displayName);
+			}
+		}
+
+		return text;
+	};
+
 	return {
 		channelMentionToNameFromMessage,
 		roleMentionToNameFromMessage,
 		userMentionToNameFromMessage,
+		channelMentionToName,
+		roleMentionToName,
+		userMentionToName,
 	};
 };

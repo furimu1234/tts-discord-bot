@@ -1,2 +1,0 @@
-ALTER TABLE "tts"."users_voice_preference" ALTER COLUMN "emotion_level" SET DATA TYPE double precision;--> statement-breakpoint
-ALTER TABLE "tts"."voice_preference" ALTER COLUMN "emotion_level" SET DATA TYPE double precision;

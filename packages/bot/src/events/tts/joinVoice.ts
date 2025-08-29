@@ -1,4 +1,4 @@
-import { createGuildInfo, getGuildInfo } from '@tts/db';
+import { createVoiceConnect, getorCreateGuildInfoFindOne } from '@tts/db';
 import { Events, type Message, MessageFlags } from 'discord.js';
 import { createjoinVoicePanelComponent } from '../../components';
 import { container } from '../../container';
@@ -12,7 +12,7 @@ export const name = Events.MessageCreate;
 export const once = false;
 
 /**
- * メッセージが送信されたVCに
+ * メッセージが送信されたVCに接続する
  */
 export async function execute(message: Message): Promise<void> {
 	if (!container.current) return;
@@ -53,12 +53,15 @@ export async function execute(message: Message): Promise<void> {
 	}
 
 	const guildInfo = await store.do(async (db) => {
-		let [result] = await getGuildInfo(db, { guildId: guild.id });
-
-		if (!result) {
-			result = await createGuildInfo(db, guild.id);
-		}
-		return result;
+		//voice connectionのデータ作成
+		const a = await createVoiceConnect(
+			db,
+			guild.id,
+			voiceChannel.id,
+			message.channelId,
+		);
+		console.log('voice connection: ', a);
+		return getorCreateGuildInfoFindOne(db, { guildId: guild.id });
 	});
 
 	await message.channel.send({

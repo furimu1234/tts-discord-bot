@@ -5,22 +5,18 @@ import {
 	joinVoiceChannel,
 } from '@discordjs/voice';
 import type { Client, Message } from 'discord.js';
-import {
-	ttsBotClient1,
-	ttsBotClient2,
-	ttsBotClient3,
-	ttsBotClient4,
-} from '../container';
+import { botClient } from '../container';
 
 export const isDisConnected = (connection?: VoiceConnection) => {
 	return connection?.state.status === VoiceConnectionStatus.Disconnected;
 };
 
 /**ボイスコネクションを取得する */
-export const createVoiceConnection = (
+export const createVoiceConnection = async (
 	client: Client,
 	message: Message,
 	voiceChannelId: string,
+	isDisConnect = false,
 ) => {
 	if (!message.guild) return;
 	if (!client.user) return;
@@ -28,6 +24,12 @@ export const createVoiceConnection = (
 	let connection = getRawVoiceConnection(message.guild.id, client.user.id);
 
 	if (!connection) {
+		//意味があるかわからないけどVCに残ってた場合を考慮し強制切断
+		try {
+			if (isDisConnect) await message.guild.members.me?.voice.disconnect();
+		} catch {}
+		//再接続
+
 		connection = joinVoiceChannel({
 			channelId: voiceChannelId,
 			guildId: message.guild.id,
@@ -44,27 +46,9 @@ export const getBlankVoiceConnection = (
 	message: Message,
 	voiceChannelId: string,
 ) => {
-	let client: Client | undefined = ttsBotClient1;
+	const client: Client | undefined = botClient;
 
-	let connection = createVoiceConnection(
-		ttsBotClient1,
-		message,
-		voiceChannelId,
-	);
-	if (!isDisConnected(connection)) {
-		connection = createVoiceConnection(ttsBotClient2, message, voiceChannelId);
-		client = ttsBotClient2;
-	}
-
-	if (!isDisConnected(connection)) {
-		connection = createVoiceConnection(ttsBotClient3, message, voiceChannelId);
-		client = ttsBotClient3;
-	}
-
-	if (!isDisConnected(connection)) {
-		connection = createVoiceConnection(ttsBotClient4, message, voiceChannelId);
-		client = ttsBotClient4;
-	}
+	const connection = createVoiceConnection(botClient, message, voiceChannelId);
 
 	return { connection, client };
 };
