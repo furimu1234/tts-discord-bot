@@ -33,6 +33,17 @@ export const createjoinVoicePanelComponent = (
 				`# サーバ設定\n- 読み上げ文字数: ${guildInfoOption.textLength}`,
 			),
 		)
+		.addSectionComponents(
+			addSectionWithButtonBuilder({
+				contents: [
+					`# ${voiceChannel.name}の設定(読み上げ終了すると初期化されます)`,
+				],
+				buttonLabel:
+					'自動再接続\n- バグ修正などでBOTが再起動したときに自動接続します。',
+				buttonCustomId: `toggle_auto_connect:${voiceChannel.id}`,
+				buttonStyle: ButtonStyle.Success,
+			}),
+		)
 		.addSeparatorComponents(addSeparatorBuilder())
 		.addTextDisplayComponents(
 			addTextDisplayBuilder(`-# by ${clientUser.displayName}`),
