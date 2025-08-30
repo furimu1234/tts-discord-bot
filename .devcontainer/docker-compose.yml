@@ -7,7 +7,7 @@ services:
 
     volumes:
       - ../..:/workspaces:cached
-    working_dir: /workspace
+      - $HOME/.ssh:/wsl-ssh:ro
     environment:
         POSTGRES_PASSWORD: postgres
         POSTGRES_USER: postgres
@@ -15,7 +15,7 @@ services:
         POSTGRES_HOSTNAME: db
     command: sleep infinity
     network_mode: service:db
-
+    
   db:
     container_name: tts-discord-bot-pg
     image: postgres:latest
