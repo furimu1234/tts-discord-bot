@@ -96,8 +96,8 @@ export const createVoiceInfo = async (
 			await db.insert(voiceInfo).values([
 				{
 					userId: userId,
-					useVv: false,
-					vtId: vvModels[0].id,
+					useVv: true,
+					vvId: vvModels[0].id,
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
