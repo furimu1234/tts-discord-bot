@@ -49,6 +49,7 @@ const main = async (before: VoiceState) => {
 
 	if (!connection) throw new SendError(messageID.E00007(), false);
 	await connection.disconnect();
+	connection.destroy();
 
 	await before.channel.send(`${before.channel.name}から自動退出しました`);
 };

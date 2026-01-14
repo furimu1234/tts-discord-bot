@@ -43,6 +43,7 @@ const main = async (interaction: CommandInteraction) => {
 
 	if (!connection) throw new SendError(messageID.E00007(), false);
 	await connection.disconnect();
+	connection.destroy();
 
 	await interaction.editReply(`${member.voice.channel.name}から退出しました`);
 };

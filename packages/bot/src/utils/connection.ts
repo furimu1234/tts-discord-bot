@@ -23,19 +23,18 @@ export const createVoiceConnection = async (
 
 	if (!connection) {
 		//意味があるかわからないけどVCに残ってた場合を考慮し強制切断
-		try {
-			if (isDisConnect) await guild.members.me?.voice.disconnect();
-		} catch {}
-		//再接続
+		if (isDisConnect) await guild.members.me?.voice.disconnect();
 
-		connection = joinVoiceChannel({
-			channelId: voiceChannelId,
-			guildId: guild.id,
-			adapterCreator: guild.voiceAdapterCreator,
-			group: client.user.id,
-			selfDeaf: true,
-		});
+		//再接続
 	}
+
+	connection = joinVoiceChannel({
+		channelId: voiceChannelId,
+		guildId: guild.id,
+		adapterCreator: guild.voiceAdapterCreator,
+		group: client.user.id,
+		selfDeaf: true,
+	});
 
 	return connection;
 };
