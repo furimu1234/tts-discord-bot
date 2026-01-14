@@ -39,9 +39,6 @@ importers:
       '@tts/db':
         specifier: workspace:*
         version: link:../db
-      '@tts/generatevoice':
-        specifier: workspace:*
-        version: link:../generateVoice
       '@tts/lib':
         specifier: workspace:*
         version: link:../lib
@@ -79,22 +76,6 @@ importers:
       drizzle-orm:
         specifier: ^0.43.1
         version: 0.43.1(@types/pg@8.15.6)(pg@8.16.3)
-    devDependencies:
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/generateVoice:
-    dependencies:
-      '@tts/db':
-        specifier: workspace:*
-        version: link:../db
-      '@tts/lib':
-        specifier: workspace:*
-        version: link:../lib
-      '@tts/replace':
-        specifier: workspace:*
-        version: link:../replace
     devDependencies:
       typescript:
         specifier: ^5.9.3

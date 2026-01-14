@@ -1,4 +1,3 @@
-import { createVoiceInfo, getVoiceInfo } from '@tts/db';
 import { getMemberById, messageID, SendError, wrapSendError } from '@tts/lib';
 import {
 	type CommandInteraction,
@@ -6,9 +5,8 @@ import {
 	SlashCommandBuilder,
 } from 'discord.js';
 import { makeMenuComponent } from '../components';
-import { container } from '../container';
 import { createVoiceConnection } from '../utils/connection';
-import { createInitVoiceInfo } from '../utils/voiceInfo';
+
 export const data = new SlashCommandBuilder()
 	.setName('読み上げ開始')
 	.setDescription('コマンド実行者が接続してるチャンネルで読み上げを開始します');
