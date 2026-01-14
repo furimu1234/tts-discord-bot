@@ -23,11 +23,13 @@ COPY packages/db/package.json ./packages/db/
 # 他にも packages/* があるなら同様に追加してください:
 # COPY packages/xxx/package.json ./packages/xxx/
 
+# ソースコードを全てコピー
+COPY . .
+
+
 # ここで install（tsc を含む devDependencies も入る）
 RUN pnpm i
 
-# ソースコードを全てコピー
-COPY . .
 
 # ビルド
 RUN pnpm build
