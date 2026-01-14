@@ -24,7 +24,7 @@ COPY packages/db/package.json ./packages/db/
 # COPY packages/xxx/package.json ./packages/xxx/
 
 # ここで install（tsc を含む devDependencies も入る）
-RUN pnpm install --frozen-lockfile
+RUN pnpm i
 
 # ソースコードを全てコピー
 COPY . .
