@@ -1,0 +1,1 @@
+ALTER TABLE "dictionary" DROP COLUMN "creater_id";

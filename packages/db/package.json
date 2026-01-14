@@ -1,5 +1,5 @@
 {
-  "name": "@example_build/db",
+  "name": "@tts/db",
   "private": true,
   "type": "commonjs",
   "main": "dist/index.js",
@@ -11,14 +11,16 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "type-check": "tsc --noEmit -p .",
-    "generate": "drizzle-kit generate --name=example_build",
+    "generate": "drizzle-kit generate --name=tts",
     "migrate": "drizzle-kit migrate",
     "drizzle": "drizzle-kit",
-    "dbInit": "tsx src/init.ts && pnpm generate"
+    "dbInit": "tsx src/init.ts && pnpm generate",
+    "watch": "tsc -p tsconfig.json -w"
   },
   "dependencies": {
     "drizzle-kit": "^0.31.0",
-    "drizzle-orm": "^0.43.1"
+    "drizzle-orm": "^0.43.1",
+    "@tts/lib": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

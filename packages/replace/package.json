@@ -1,0 +1,23 @@
+{
+  "name": "@tts/replace",
+  "private": "true",
+  "type": "commonjs",
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.ts"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "DOTENV_CONFIG_PATH=../.env tsx -r dotenv/config --watch src/index.ts",
+    "build": "tsc -p .",
+    "type-check": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@tts/db": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

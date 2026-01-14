@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-import { schema } from '@example_build/db';
+import { schema } from '@tts/db';
 import { type Client, Events } from 'discord.js';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
@@ -20,6 +20,11 @@ botClient.once(Events.ClientReady, async (c) => {
 
 	if (!botClient.user) return;
 
+	console.log(
+		'ロードコマンドリスト: ',
+		commands.map((x) => `- ${x.name}`).join('\n'),
+	);
+
 	slashCommandRegister(botClient.user, commands);
 });
 
@@ -35,17 +40,23 @@ export const runClient = async (client: Client) => {
 		schema: schema,
 	});
 
-	await migrate(db, {
-		migrationsFolder: path.resolve(
-			path.dirname(__filename),
-			'../../db/drizzle',
-		),
-		migrationsSchema: path.resolve(path.dirname(__filename), '../../db/schema'),
-	});
 	client.login(getEnv('TOKEN')).catch((e) => {
 		console.error('❌ Login failed:', e);
 		process.exit(1);
 	});
+
+	try {
+		await migrate(db, {
+			migrationsFolder: path.resolve(
+				path.dirname(__filename),
+				'../../db/drizzle',
+			),
+			migrationsSchema: path.resolve(
+				path.dirname(__filename),
+				'../../db/schema',
+			),
+		});
+	} catch {}
 };
 
 runClient(botClient);

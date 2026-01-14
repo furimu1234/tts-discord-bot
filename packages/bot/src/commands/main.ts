@@ -21,6 +21,8 @@ export async function loadCommands(): Promise<slashCommands> {
 				!file.includes('main') &&
 				(file.endsWith('.ts') || file.endsWith('.js')),
 		);
+
+	console.log('commands files');
 	for (const file of commandFiles) {
 		const filePath = path.join('./', file);
 		const command: { data: SlashCommandBuilder; execute: commandExecute } =

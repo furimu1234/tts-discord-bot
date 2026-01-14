@@ -6,8 +6,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
-    ports:
-      - "5432:5432"
+    expose:
+      - 5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
   
@@ -21,6 +21,13 @@ services:
       - .env
     depends_on:
       - db
+      - voice_vox
+  
+  voice_vox:
+    image: voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+    expose:
+      - 50021
+    tty: true
 
 
 volumes:

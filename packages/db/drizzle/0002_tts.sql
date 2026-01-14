@@ -1,0 +1,1 @@
+ALTER TABLE "dictionary" ADD COLUMN "create_guild_id" varchar(19) NOT NULL;

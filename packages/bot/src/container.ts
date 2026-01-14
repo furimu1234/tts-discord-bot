@@ -1,4 +1,6 @@
-import { MakeDataStore, schema } from '@example_build/db';
+import { MakeDataStore, schema } from '@tts/db';
+import { makeVoiceTextWebClient, makeVoiceVoxClient } from '@tts/lib';
+import { makeReplaceClient } from '@tts/replace';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import * as dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/node-postgres';
@@ -21,8 +23,23 @@ export const Container = (): IContainer => {
 		return dataStore;
 	};
 
+	const getReplaceClient = () => {
+		return makeReplaceClient();
+	};
+
+	const getVoiceVoxClient = () => {
+		return makeVoiceVoxClient();
+	};
+
+	const getVOICETEXTWebClient = () => {
+		return makeVoiceTextWebClient(process.env.VOICE_TEXT_WEB_API_KEY || '');
+	};
+
 	return {
 		getDataStore,
+		getReplaceClient,
+		getVoiceVoxClient,
+		getVOICETEXTWebClient,
 	};
 };
 
@@ -40,3 +57,5 @@ export const botClient = new Client({
 });
 
 botClient.setMaxListeners(0);
+
+export const botClients = [botClient];
