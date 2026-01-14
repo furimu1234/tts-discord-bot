@@ -5,6 +5,7 @@ import {
 	SlashCommandBuilder,
 } from 'discord.js';
 import { makeMenuComponent } from '../components';
+import { makeMiniMenuComponent } from '../components/embeds';
 import { createVoiceConnection } from '../utils/connection';
 
 export const data = new SlashCommandBuilder()
@@ -40,10 +41,11 @@ const main = async (interaction: CommandInteraction) => {
 	);
 
 	if (!connection) throw new SendError(messageID.E00006(), false);
+	const { embed, components } = makeMiniMenuComponent();
 
 	await interaction.followUp(`${member.voice.channel?.name}に接続しました。`);
 	await interaction.channel.send({
-		components: [await makeMenuComponent(member, interaction.channel)],
-		flags: MessageFlags.IsComponentsV2,
+		embeds: [embed],
+		components: components,
 	});
 };

@@ -6,6 +6,7 @@ import {
 	MessageFlags,
 } from 'discord.js';
 import { makeMenuComponent } from '../../components';
+import { makeMiniMenuComponent } from '../../components/embeds';
 import { createVoiceConnection } from '../../utils/connection';
 
 export const name = Events.InteractionCreate;
@@ -44,5 +45,11 @@ const main = async (interaction: ButtonInteraction) => {
 
 	if (!connection) throw new SendError(messageID.E00006(), false);
 
+	const { embed, components } = makeMiniMenuComponent();
+
 	await interaction.followUp(`${member.voice.channel?.name}に接続しました。`);
+	await interaction.channel.send({
+		embeds: [embed],
+		components: components,
+	});
 };

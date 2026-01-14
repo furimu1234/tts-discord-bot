@@ -2,6 +2,7 @@ import { createVoiceInfo, getAutoConnect, getVoiceInfo } from '@tts/db';
 import { messageID, SendError, wrapSendError } from '@tts/lib';
 import { Events, MessageFlags, type VoiceState } from 'discord.js';
 import { makeMenuComponent } from '../components';
+import { makeMiniMenuComponent } from '../components/embeds';
 import { container } from '../container';
 import { createVoiceConnection } from '../utils/connection';
 import { createInitVoiceInfo } from '../utils/voiceInfo';
@@ -81,9 +82,11 @@ const main = async (after: VoiceState) => {
 
 	if (!connection) throw new SendError(messageID.E00006(), false);
 
+	const { embed, components } = makeMiniMenuComponent();
+
 	await after.channel.send(`${member.voice.channel?.name}に自動接続しました。`);
 	await after.channel.send({
-		components: [await makeMenuComponent(member, after.channel)],
-		flags: MessageFlags.IsComponentsV2,
+		embeds: [embed],
+		components: components,
 	});
 };
