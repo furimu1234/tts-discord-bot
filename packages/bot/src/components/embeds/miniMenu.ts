@@ -12,6 +12,14 @@ export const makeMiniMenuComponent = () => {
 			'下のボタンを押してBOTの設定等を出来るよ!\n1️⃣ 読み上げ終了\n2️⃣ 読み上げ音声設定\n3️⃣ 辞書追加・更新\n4️⃣ 辞書削除\n5️⃣ 辞書一覧\n6️⃣ 自動接続追加・更新\n7️⃣ 自動接続削除\n8️⃣ 自動接続一覧',
 		)
 		.setFooter({ text: '読み上げ開始時の簡略メニューです' });
+	embed.addFields({
+		name: `読み上げ文字数`,
+		value: '15文字を読み上げます!',
+	});
+	embed.addFields({
+		name: '読み上げをブロック',
+		value: '先頭に**;**を付けるとそのメッセージは読み上げなくなります',
+	});
 
 	const row0 = new ActionRowBuilder<ButtonBuilder>().addComponents(
 		new ButtonBuilder()
