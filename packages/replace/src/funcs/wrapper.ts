@@ -34,9 +34,11 @@ export const makeReplaceClient = () => {
 		baseMessage: Message,
 		dictionaries: IDictionaryResponse,
 	) => {
+		const discordReplace = DiscordReplace();
 		let baseText = await discordFromMessage(baseMessage);
 		baseText = base(baseText);
 		baseText = dictionary(baseText, dictionaries);
+		baseText = discordReplace.emojiToName(baseText);
 
 		return baseText;
 	};

@@ -14,6 +14,8 @@ interface IDiscordReplace {
 	roleMentionToName: (text: string, guild: Guild) => string;
 	/**ユーザメンションをユーザ名に置換する */
 	userMentionToName: (text: string, guild: Guild) => Promise<string>;
+	/**絵文字を絵文字名に置換する */
+	emojiToName: (text: string) => string;
 }
 
 export const DiscordReplace = (): IDiscordReplace => {
@@ -131,6 +133,10 @@ export const DiscordReplace = (): IDiscordReplace => {
 		return text;
 	};
 
+	const emojiToName = (text: string) => {
+		return text.replace(/<a?:([^:>]+):\d+>/g, '$1');
+	};
+
 	return {
 		channelMentionToNameFromMessage,
 		roleMentionToNameFromMessage,
@@ -138,5 +144,6 @@ export const DiscordReplace = (): IDiscordReplace => {
 		channelMentionToName,
 		roleMentionToName,
 		userMentionToName,
+		emojiToName,
 	};
 };
