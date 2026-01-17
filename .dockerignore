@@ -1,2 +1,9 @@
-dist/
-node_modules/
+**/node_modules
+**/dist
+**/.turbo
+**/.next
+**/.cache
+**/.pnpm-store
+.git
+Dockerfile
+docker-compose.yml

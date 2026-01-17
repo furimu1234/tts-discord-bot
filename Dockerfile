@@ -56,5 +56,9 @@ COPY --from=builder /app/pnpm-workspace.yaml ./
 
 COPY --from=builder /app/packages ./packages
 
+
+# speaker emotion master登録
+RUN sh ./registerMaster.sh
+
 # 本番用依存だけ入れる（ビルド済み成果物を動かす想定）
 RUN pnpm install --prod --frozen-lockfile

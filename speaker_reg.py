@@ -45,7 +45,9 @@ async def main():
     pool = await asyncpg.create_pool(dsn=os.environ.get("PG_URL"))
     async with pool.acquire() as conn:
         async with conn.transaction():
-            await conn.executemany( "insert into speaker_emotion_master (id, speaker,emotion) values ($1,$2,$3)", records)
+            try:
+                await conn.executemany( "insert into speaker_emotion_master (id, speaker,emotion) values ($1,$2,$3)", records)
+            except:pass
 
 async def main2():
     speakers = ["show", "takeru","haruka", "hikari", "santa","bear"]
@@ -70,8 +72,9 @@ async def main2():
 
     async with pool.acquire() as conn:
         async with conn.transaction():
-            await conn.executemany( "insert into speaker_emotion_master (id, speaker,emotion) values ($1,$2,$3)", records)
-
+            try:
+                await conn.executemany( "insert into speaker_emotion_master (id, speaker,emotion) values ($1,$2,$3)", records)
+            except: pass
 
 
 
