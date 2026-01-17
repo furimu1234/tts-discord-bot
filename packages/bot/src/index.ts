@@ -63,6 +63,8 @@ export const runClient = async (client: Client) => {
 			),
 		});
 	} catch {}
+
+	await registerMaster();
 };
 
 const registerMaster = async () => {
@@ -108,7 +110,5 @@ const registerMaster = async () => {
 
 	console.log('==========話者・感情登録終了==========');
 };
-
-registerMaster();
 
 runClient(botClient);
