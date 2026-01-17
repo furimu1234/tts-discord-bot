@@ -1,11 +1,6 @@
 import { messageID, SendError, wrapSendError } from '@tts/lib';
-import {
-	type ButtonInteraction,
-	Events,
-	type Interaction,
-	MessageFlags,
-} from 'discord.js';
-import { makeMenuComponent } from '../../components';
+import { type ButtonInteraction, Events, type Interaction } from 'discord.js';
+
 import { makeMiniMenuComponent } from '../../components/embeds';
 import { createVoiceConnection } from '../../utils/connection';
 

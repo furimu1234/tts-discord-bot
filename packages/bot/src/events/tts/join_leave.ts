@@ -2,7 +2,6 @@ import { getVoiceConnection } from '@discordjs/voice';
 import {
 	createVoiceInfo,
 	type DefaultSpeakers,
-	getDictionaries,
 	getMasterBySpeakerId,
 	getVoiceInfo,
 } from '@tts/db';
@@ -11,13 +10,13 @@ import {
 	Events,
 	type Guild,
 	type GuildMember,
-	type Message,
+	type VoiceBasedChannel,
 	type VoiceState,
 } from 'discord.js';
 import { container } from '../../container';
 import { createInitVoiceInfo } from '../../utils/voiceInfo';
 
-export const name = Events.MessageCreate;
+export const name = Events.VoiceStateUpdate;
 export const once = false;
 export async function execute(before: VoiceState, after: VoiceState) {
 	await wrapSendError(
@@ -35,9 +34,11 @@ export const main = async (before: VoiceState, after: VoiceState) => {
 	let guild: Guild;
 	let member: GuildMember | null;
 	let text: string = '';
+	let voiceChannel: VoiceBasedChannel;
 
 	if (before.channel) {
 		guild = before.guild;
+		voiceChannel = before.channel;
 
 		if (!guild) return;
 
@@ -45,8 +46,9 @@ export const main = async (before: VoiceState, after: VoiceState) => {
 
 		member = before.member;
 		text = `${member?.displayName}が退出しました`;
-	} else {
+	} else if (after.channel) {
 		guild = after.guild;
+		voiceChannel = after.channel;
 
 		if (!guild) return;
 
@@ -54,14 +56,13 @@ export const main = async (before: VoiceState, after: VoiceState) => {
 
 		member = after.member;
 		text = `${member?.displayName}が入室しました`;
-	}
+	} else return;
 
 	if (!member) return;
 	if (member.user.bot) return;
-	if (!member.voice.channel) return;
 
 	const voiceState = guild.voiceStates.cache.find(
-		(vs) => vs.channelId === member.voice.channel?.id,
+		(vs) => vs.channelId === voiceChannel.id,
 	);
 
 	if (!voiceState) return;
@@ -72,11 +73,13 @@ export const main = async (before: VoiceState, after: VoiceState) => {
 			const voiceInfo = createInitVoiceInfo();
 
 			await createVoiceInfo(db, member.id, voiceInfo);
-
-			return await getVoiceInfo(db, member.id);
 		}
+		if (!!model && !!model.main && !model.sub) {
+			const voiceInfo = createInitVoiceInfo({ useVv: model.main.useVv });
 
-		return model;
+			await createVoiceInfo(db, member.id, voiceInfo);
+		}
+		return await getVoiceInfo(db, member.id);
 	});
 	if (!model) return;
 
@@ -122,5 +125,7 @@ export const main = async (before: VoiceState, after: VoiceState) => {
 		await player.play(async () => {
 			return result.audio;
 		});
+	} else {
+		console.log('model subが見つかりません(謎のエラー');
 	}
 };

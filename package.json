@@ -11,6 +11,7 @@
     "build": "pnpm -F \"@tts/*\" run build",
     "type-check": "pnpm -r --filter ./packages/* run type-check",
     "start": "pnpm -F \"@tts/bot\" start",
+    "local": "pnpm build && pnpm start",
     "dev": "pnpm -F \"@tts/bot\" dev",
     "clean": "git clean -Xfd -e pnpm-lock.yaml",
     "generate": "pnpm --filter db run generate",

@@ -1,7 +1,6 @@
 import { createVoiceInfo, getAutoConnect, getVoiceInfo } from '@tts/db';
 import { messageID, SendError, wrapSendError } from '@tts/lib';
-import { Events, MessageFlags, type VoiceState } from 'discord.js';
-import { makeMenuComponent } from '../components';
+import { Events, type VoiceState } from 'discord.js';
 import { makeMiniMenuComponent } from '../components/embeds';
 import { container } from '../container';
 import { createVoiceConnection } from '../utils/connection';

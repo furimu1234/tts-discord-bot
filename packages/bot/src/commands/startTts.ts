@@ -1,10 +1,6 @@
 import { getMemberById, messageID, SendError, wrapSendError } from '@tts/lib';
-import {
-	type CommandInteraction,
-	MessageFlags,
-	SlashCommandBuilder,
-} from 'discord.js';
-import { makeMenuComponent } from '../components';
+import { type CommandInteraction, SlashCommandBuilder } from 'discord.js';
+
 import { makeMiniMenuComponent } from '../components/embeds';
 import { createVoiceConnection } from '../utils/connection';
 
