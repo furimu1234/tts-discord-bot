@@ -1,0 +1,1 @@
+ALTER TABLE "speaker_emotion_master" ADD CONSTRAINT "speaker_emotion_master_speaker_emotion_uk" UNIQUE("speaker","emotion");

@@ -17,3 +17,12 @@ export type ContainerRef = { current: IContainer | undefined };
 export type slashCommands = RESTPostAPIChatInputApplicationCommandsJSONBody[];
 
 export type commandExecute = (interaction: Interaction) => Promise<void>;
+
+export interface SpeakerType {
+	id: number;
+	name: string;
+	styles: {
+		id: number;
+		name: string;
+	}[];
+}

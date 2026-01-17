@@ -1,6 +1,5 @@
 import { SendError } from '@tts/lib';
-import { eq } from 'drizzle-orm';
-import { fa } from 'zod/v4/locales';
+
 import type { SchemaDB } from '../client';
 import { voiceInfo, vtVoiceInfo, vvVoiceInfo } from '../schema';
 
@@ -39,6 +38,16 @@ export const createVoiceInfo = async (
 					speed: speed,
 				},
 			])
+			.onConflictDoUpdate({
+				target: vtVoiceInfo.userId,
+				set: {
+					emotionLevel: emotionLevel,
+					pitch: pitch,
+					speakerId: speakerId,
+					speed: speed,
+					updatedAt: new Date(),
+				},
+			})
 			.returning({ id: vtVoiceInfo.id });
 
 		if (vtModels.length !== 1)
@@ -49,12 +58,10 @@ export const createVoiceInfo = async (
 
 		//voiceinfoが無ければ新規登録
 		//既にあればvvvoiceinfoかvtvoiceifnoのレコードIDを更新する
-		const alreadyModel = await db.query.voiceInfo.findFirst({
-			where: eq(voiceInfo.userId, userId),
-		});
 
-		if (!alreadyModel) {
-			await db.insert(voiceInfo).values([
+		await db
+			.insert(voiceInfo)
+			.values([
 				{
 					userId: userId,
 					useVv: false,
@@ -62,13 +69,11 @@ export const createVoiceInfo = async (
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
-			]);
-		} else {
-			await db
-				.update(voiceInfo)
-				.set({ vtId: vtModels[0].id, updatedAt: new Date() })
-				.where(eq(voiceInfo.userId, userId));
-		}
+			])
+			.onConflictDoUpdate({
+				target: voiceInfo.userId,
+				set: { useVv: false, vtId: vtModels[0].id, updatedAt: new Date() },
+			});
 	} else {
 		const vvModels = await db
 			.insert(vvVoiceInfo)
@@ -83,17 +88,24 @@ export const createVoiceInfo = async (
 					speed: speed,
 				},
 			])
+			.onConflictDoUpdate({
+				target: vvVoiceInfo.userId,
+				set: {
+					intnation: emotionLevel,
+					speakerId: speakerId,
+					pitch: pitch,
+					speed: speed,
+					updatedAt: new Date(),
+				},
+			})
 			.returning({ id: vvVoiceInfo.id });
 
 		if (vvModels.length !== 1)
 			throw new SendError('VOICE VOXのデータ登録に失敗しました', false);
 
-		const alreadyModel = await db.query.voiceInfo.findFirst({
-			where: eq(voiceInfo.userId, userId),
-		});
-
-		if (!alreadyModel) {
-			await db.insert(voiceInfo).values([
+		await db
+			.insert(voiceInfo)
+			.values([
 				{
 					userId: userId,
 					useVv: true,
@@ -101,12 +113,14 @@ export const createVoiceInfo = async (
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
-			]);
-		} else {
-			await db
-				.update(voiceInfo)
-				.set({ vvId: vvModels[0].id, updatedAt: new Date() })
-				.where(eq(voiceInfo.userId, userId));
-		}
+			])
+			.onConflictDoUpdate({
+				target: voiceInfo.userId,
+				set: {
+					useVv: true,
+					vvId: vvModels[0].id,
+					updatedAt: new Date(),
+				},
+			});
 	}
 };

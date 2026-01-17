@@ -39,26 +39,18 @@ RUN pnpm build
 FROM node:18-slim AS runner
 
 RUN apt-get update \
-  && apt-get install -y python3 make g++  ffmpeg\
-  && ln -sf /usr/bin/python3 /usr/bin/python \
+  && apt-get install -y python3 make g++ ffmpeg \
   && rm -rf /var/lib/apt/lists/*
-
 
 WORKDIR /app
 
-# pnpm（本番でも必要なら）
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 
-# 実行に必要なファイルだけコピー
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/pnpm-workspace.yaml ./
-
 COPY --from=builder /app/packages ./packages
 
 
-# speaker emotion master登録
-RUN sh ./registerMaster.sh
 
-# 本番用依存だけ入れる（ビルド済み成果物を動かす想定）
 RUN pnpm install --prod --frozen-lockfile

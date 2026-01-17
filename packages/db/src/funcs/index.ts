@@ -1,5 +1,6 @@
 export * from './createAutoConnect';
 export * from './createDictionary';
+export * from './createSpeakerEmotionMaster';
 export * from './createvoiceInfo';
 export * from './deleteAutoConnect';
 export * from './deleteDictionary';

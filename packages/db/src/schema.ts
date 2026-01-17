@@ -9,18 +9,28 @@ import {
 	serial,
 	text,
 	timestamp,
+	unique,
 	varchar,
 } from 'drizzle-orm/pg-core';
 import type { emotion, speaker } from './handmeid';
 
 //読み上げ感情マスタ
 //voice vox用
-export const speakerEmotionMaster = pgTable('speaker_emotion_master', {
-	id: integer('id').primaryKey(),
-	speaker: varchar('speaker').$type<speaker>().notNull(),
-	emotion: varchar('emotion').$type<emotion>().notNull(),
-});
 
+export const speakerEmotionMaster = pgTable(
+	'speaker_emotion_master',
+	{
+		id: integer('id').primaryKey(),
+		speaker: varchar('speaker').$type<speaker>().notNull(),
+		emotion: varchar('emotion').$type<emotion>().notNull(),
+	},
+	(t) => ({
+		speakerEmotionUk: unique('speaker_emotion_master_speaker_emotion_uk').on(
+			t.speaker,
+			t.emotion,
+		),
+	}),
+);
 //サーバー設定
 export const guildInfo = pgTable('guild_info', {
 	id: serial('id').primaryKey(),
