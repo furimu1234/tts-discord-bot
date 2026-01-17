@@ -23,7 +23,6 @@
         - db
         - voice_vox
 
-    
     voice_vox:
       image: voicevox/voicevox_engine:cpu-ubuntu20.04-latest
       expose:
