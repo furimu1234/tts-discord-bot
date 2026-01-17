@@ -6,8 +6,13 @@ import {
 	getMasterBySpeakerId,
 	getVoiceInfo,
 } from '@tts/db';
-import { Player, wrapSendError } from '@tts/lib';
-import { Events, type Message } from 'discord.js';
+import {
+	Player,
+	PREFIX_BLOCK_SYMBOL,
+	SLICE_LENGTH,
+	wrapSendError,
+} from '@tts/lib';
+import { Events, type Message, type VoiceState } from 'discord.js';
 import { container } from '../../container';
 import { createInitVoiceInfo } from '../../utils/voiceInfo';
 
@@ -36,14 +41,10 @@ export const main = async (message: Message) => {
 	if (!messageChannel?.isSendable()) return;
 
 	const member = message.member;
-
 	if (!member) return;
-	if (member.user.bot) return;
-	if (!member.voice.channel) return;
 
-	const voiceState = guild.voiceStates.cache.find(
-		(vs) => vs.channelId === member.voice.channel?.id,
-	);
+	//読み上げブロックも含める
+	const voiceState = getVoiceState(message);
 
 	if (!voiceState) return;
 
@@ -52,6 +53,8 @@ export const main = async (message: Message) => {
 	});
 
 	const replaced = await replaceClient.runAllFromMessage(message, dictionaries);
+
+	const sliced = replaced.slice(0, SLICE_LENGTH);
 
 	const model = await store.do(async (db) => {
 		const model = await getVoiceInfo(db, member.id);
@@ -78,7 +81,7 @@ export const main = async (message: Message) => {
 
 	if (model.main.useVv && model.sub?.speakerId) {
 		const engine = container.current.getVoiceVoxClient();
-		const query = await engine.createAudioQuery(model.sub.speakerId, replaced);
+		const query = await engine.createAudioQuery(model.sub.speakerId, sliced);
 
 		query.pitchScale = model.sub.pitch;
 		query.speedScale = model.sub.speed;
@@ -98,7 +101,7 @@ export const main = async (message: Message) => {
 		if (!masterModel) return;
 
 		const result = await engine.request({
-			text: replaced,
+			text: sliced,
 			emotionLevel: model.sub.emotionLevel,
 			pitch: model.sub.pitch,
 			speed: model.sub.speed,
@@ -112,4 +115,25 @@ export const main = async (message: Message) => {
 			return result.audio;
 		});
 	}
+};
+
+/**
+ * ユーザが接続してるVCに接続してるBOTクライアントを取得する
+ * @param message 送信されたメッセージ
+ * @returns voicestate
+ */
+const getVoiceState = (message: Message): VoiceState | undefined => {
+	if (!message.guild) return;
+	const prefix = message.content[0];
+
+	if (PREFIX_BLOCK_SYMBOL.includes(prefix)) return;
+	if (message.author.bot) return;
+	const member = message.member;
+
+	if (!member) return;
+	if (!member.voice.channel) return;
+
+	return message.guild.voiceStates.cache.find(
+		(vs) => vs.channelId === member.voice.channel?.id,
+	);
 };
